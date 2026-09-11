@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ডিউটি বার্তা প্রস্তুতকারক</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B3C7A;
+    --navy-2:#12509E;
+    --slate:#4A5568;
+    --paper:#F3F1EA;
+    --card:#FFFFFF;
+    --line:#DCD6C7;
+    --brass:#9A6B24;
+    --brass-2:#B98432;
+    --ink:#1B2130;
+    --muted:#6B7280;
+    --danger:#A23B3B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans Bengali','Noto Sans',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .app{max-width:560px;margin:0 auto;padding:0 0 48px;}
+
+  .masthead{
+    background:var(--navy);
+    color:#EDEFF5;
+    padding:22px 20px 18px;
+    border-bottom:3px solid var(--brass);
+  }
+  .masthead h1{
+    margin:0 0 4px;
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+  .masthead p{
+    margin:0;
+    font-size:12.5px;
+    color:#B9C2D6;
+  }
+
+  .tabs{
+    display:flex;
+    background:var(--navy-2);
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:12px 8px;
+    font-size:13.5px;
+    color:#C7CFE0;
+    font-weight:500;
+    border-bottom:3px solid transparent;
+    cursor:pointer;
+    background:none;
+    border-top:none;border-left:none;border-right:none;
+    font-family:inherit;
+  }
+  .tab.active{
+    color:#fff;
+    border-bottom-color:var(--brass-2);
+  }
+
+  .panel{display:none;padding:18px 16px;}
+  .panel.active{display:block;}
+
+  section.card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  section.card h2{
+    font-size:14.5px;
+    margin:0 0 12px;
+    color:var(--navy);
+    font-weight:700;
+    border-left:4px solid var(--brass);
+    padding-left:10px;
+  }
+
+  label{
+    display:block;
+    font-size:12.5px;
+    color:var(--muted);
+    margin:0 0 4px;
+  }
+  input[type=text], input[type=tel], input[type=date], input[type=time], select{
+    width:100%;
+    padding:9px 10px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:14.5px;
+    font-family:inherit;
+    background:#FBFAF7;
+    color:var(--ink);
+    margin-bottom:10px;
+  }
+  input:focus, select:focus{
+    outline:2px solid var(--brass-2);
+    outline-offset:1px;
+    background:#fff;
+  }
+  .row2{display:flex;gap:8px;}
+  .row2 > div{flex:1;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .chip{
+    font-size:12.5px;
+    padding:6px 11px;
+    background:#EFEAD9;
+    border:1px solid var(--line);
+    border-radius:20px;
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .chip:active{background:var(--brass);color:#fff;}
+  .chip.active{background:var(--brass);color:#fff;border-color:var(--brass);}
+  .officer-fields{display:none;}
+  .officer-fields.active{display:block;margin-top:4px;}
+
+  .duty-block{
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:12px;
+    margin-bottom:10px;
+    background:#FCFBF8;
+  }
+  .duty-block-head{
+    display:flex;
+    flex-wrap:nowrap;
+    gap:6px;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .duty-block-head input{margin-bottom:0;flex:1 1 auto;min-width:0;font-weight:600;}
+  .duty-block-head button{flex:0 0 auto;white-space:nowrap;padding:9px 8px;font-size:11.5px;}
+  .assign-row{
+    border-top:1px dashed var(--line);
+    padding-top:8px;
+    margin-top:8px;
+  }
+  .assign-row:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+  .assign-fields{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .assign-fields select{flex:1 1 100%;margin-bottom:0;min-width:0;}
+  .assign-fields input[data-f="desig"]{flex:1 1 90px;margin-bottom:0;min-width:0;}
+  .assign-fields input[data-f="name"]{flex:2 1 130px;margin-bottom:0;min-width:0;}
+  .assign-fields input[data-f="mobile"]{flex:2 1 130px;margin-bottom:0;min-width:0;}
+  .assign-fields input[data-f="time"]{flex:1 1 90px;margin-bottom:0;min-width:0;}
+  .assign-fields .btn-small{flex:0 0 auto;margin-bottom:0;}
+
+  button.btn{
+    font-family:inherit;
+    border:none;
+    border-radius:4px;
+    padding:9px 14px;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .btn-ghost{
+    background:#fff;
+    border:1px solid var(--brass-2);
+    color:var(--brass);
+    width:100%;
+  }
+  .btn-primary{
+    background:var(--navy);
+    color:#fff;
+    width:100%;
+    padding:13px;
+    font-size:15px;
+  }
+  .btn-danger{
+    background:none;
+    color:var(--danger);
+    border:none;
+    font-size:12px;
+    padding:4px 6px;
+  }
+  .btn-small{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--slate);
+    font-size:12px;
+    padding:5px 9px;
+  }
+
+  .emp-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:9px 2px;
+    border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .emp-item:last-child{border-bottom:none;}
+  .emp-name{font-weight:600;color:var(--navy);}
+  .emp-sub{color:var(--muted);font-size:12px;}
+
+  .output-box{
+    display:block;
+    width:100%;
+    white-space:pre-wrap;
+    background:#FCFBF8;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:14px;
+    font-size:14px;
+    font-family:inherit;
+    line-height:1.65;
+    min-height:120px;
+    margin-bottom:10px;
+    resize:vertical;
+    color:var(--ink);
+  }
+  .copied-msg{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--brass);
+    height:16px;
+    margin-top:-4px;
+  }
+  .empty-state{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    padding:16px 4px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="masthead">
+    <h1 id="mastThana">দৈনন্দিন ডিউটি বার্তা প্রস্তুতকারক</h1>
+    <p id="mastUnit">থানা ও ইউনিটের তথ্য "সেটিংস"-এ দিন</p>
+    <p id="saveStatus" style="margin-top:6px;font-size:11.5px;color:#B9C2D6;"></p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="generate">বার্তা তৈরি</button>
+    <button class="tab" data-tab="directory">কর্মী তালিকা</button>
+    <button class="tab" data-tab="settings">সেটিংস</button>
+  </div>
+
+  <!-- GENERATE PANEL -->
+  <div class="panel active" id="panel-generate">
+
+    <section class="card">
+      <h2>সময়সীমা</h2>
+      <div class="row2">
+        <div>
+          <label>শুরুর তারিখ</label>
+          <input type="date" id="fromDate">
+        </div>
+        <div>
+          <label>শুরুর সময়</label>
+          <input type="time" id="fromTime" value="20:00">
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label>শেষ তারিখ</label>
+          <input type="date" id="toDate">
+        </div>
+        <div>
+          <label>শেষ সময়</label>
+          <input type="time" id="toTime" value="08:00">
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>ডিউটি পয়েন্ট</h2>
+      <div id="dutyBlocks"></div>
+      <div class="chips" id="quickChips"></div>
+      <div class="row2">
+        <button class="btn btn-ghost" id="addDutyPoint">+ নতুন ডিউটি পয়েন্ট যোগ করুন</button>
+        <button class="btn btn-ghost" id="summaryBtn">সামারি</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>ডিউটি অফিসার (ফুটার)</h2>
+      <label>এই বার্তায় কোনটি যুক্ত হবে?</label>
+      <div class="chips" id="officerTypeChips">
+        <button type="button" class="chip" data-type="night">রাত্রিকালীন ডিউটি অফিসার</button>
+        <button type="button" class="chip" data-type="day">দিবাকালীন ডিউটি অফিসার</button>
+      </div>
+
+      <div id="officerFields-night" class="officer-fields">
+        <label>রাত্রিকালীন ডিউটি অফিসার — কর্মী তালিকা থেকে বাছুন</label>
+        <select id="footerEmpSelect-night"></select>
+        <label>নাম</label>
+        <input type="text" id="footerName-night" placeholder="যেমনঃ মোঃ অন্তর">
+        <label>পদবী</label>
+        <input type="text" id="footerDesig-night" placeholder="যেমনঃ এএসআই(নি.)">
+      </div>
+
+      <div id="officerFields-day" class="officer-fields">
+        <label>দিবাকালীন ডিউটি অফিসার — কর্মী তালিকা থেকে বাছুন</label>
+        <select id="footerEmpSelect-day"></select>
+        <label>নাম</label>
+        <input type="text" id="footerName-day" placeholder="নাম">
+        <label>পদবী</label>
+        <input type="text" id="footerDesig-day" placeholder="পদবী">
+      </div>
+    </section>
+
+    <button class="btn btn-primary" id="genBtn">বার্তা তৈরি করুন</button>
+
+    <section class="card" style="margin-top:14px;" id="outputSection" style="display:none;">
+      <h2>প্রস্তুত বার্তা</h2>
+      <label id="outputHint">নিচের বার্তাটি পাঠানোর জন্য প্রস্তুত</label>
+      <textarea class="output-box" id="outputBox" rows="14" readonly></textarea>
+      <div class="row2">
+        <button class="btn btn-ghost" id="copyBtn">কপি করুন</button>
+        <button class="btn btn-ghost" id="editBtn">এডিট করুন</button>
+      </div>
+      <div class="copied-msg" id="copiedMsg"></div>
+    </section>
+  </div>
+
+  <!-- DIRECTORY PANEL -->
+  <div class="panel" id="panel-directory">
+    <section class="card">
+      <h2>নতুন কর্মী যোগ করুন</h2>
+      <label>নাম</label>
+      <input type="text" id="empName" placeholder="যেমনঃ খায়রুল ইসলাম">
+      <label>পদবী</label>
+      <select id="empDesig">
+        <option>এসআই(নি.)</option>
+        <option>এএসআই(নি.)</option>
+        <option>পিএসআই(নি.)</option>
+        <option>নায়েক</option>
+        <option>কং</option>
+        <option>অন্যান্য</option>
+      </select>
+      <label>মোবাইল নম্বর</label>
+      <input type="tel" id="empMobile" placeholder="০১৭XXXXXXXX">
+      <button class="btn btn-ghost" id="addEmpBtn">তালিকায় যোগ করুন</button>
+    </section>
+
+    <section class="card">
+      <h2>সংরক্ষিত কর্মী তালিকা</h2>
+      <button class="btn btn-ghost" id="resetEmpBtn" style="margin-bottom:12px;">পুরনো তালিকা মুছে নতুন তালিকা বসান</button>
+      <div id="empList"></div>
+    </section>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div class="panel" id="panel-settings">
+    <section class="card">
+      <h2>থানা ও ইউনিট তথ্য</h2>
+      <label>থানার নাম</label>
+      <input type="text" id="cfgThana" placeholder="যেমনঃ কোনাবাড়ী থানা">
+      <label>ইউনিট</label>
+      <input type="text" id="cfgUnit" placeholder="যেমনঃ গাজীপুর মেট্রোপলিটন পুলিশ (জিএমপি)">
+      <label>কল সাইন</label>
+      <input type="text" id="cfgCallSign" placeholder="যেমনঃ ৩ (এটি প্রতিটি ডিউটি পয়েন্টের নামের সাথে -যুক্ত হয়ে বসবে, যেমনঃ কিলো-৩)">
+      <button class="btn btn-ghost" id="saveCfgBtn">সংরক্ষণ করুন</button>
+    </section>
+  </div>
+
+</div>
+
+<script>
+const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+function toBn(str){
+  return String(str).replace(/[0-9]/g, d => bnDigits[d]);
+}
+function toEnDigits(str){
+  return String(str).replace(/[০-৯]/g, d => bnDigits.indexOf(d));
+}
+function defaultDutyName(base){
+  base = (base||'').trim();
+  if(!base) return '';
+  const cs = (state.config.callSign||'').trim();
+  return cs ? `${base}-${toBn(toEnDigits(cs))}` : base;
+}
+function fmtDate(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return toBn(`${d}/${m}/${y}`);
+}
+function fmtTime(hm){
+  if(!hm) return '';
+  const [h,m] = hm.split(':');
+  return toBn(`${h}.${m}`);
+}
+
+let state = {
+  employees: [],
+  config: { thana:'', unit:'', callSign:'' },
+  dutyPoints: [],
+  officerType: 'night',
+  footer: {
+    night: { empId:'', name:'', desig:'এএসআই(নি.)' },
+    day: { empId:'', name:'', desig:'এএসআই(নি.)' }
+  }
+};
+
+const DEFAULT_EMPLOYEES = [
+  { name:'মোঃ ইফতেখার হোসেন', designation:'অফিসার ইনচার্জ', mobile:'০১৩২০-০৭০৫৮২' },
+  { name:'মোঃ আসিফ ইকবাল', designation:'পুলিশ পরিদর্শক (নিঃ), তদন্ত', mobile:'০১৩২০-০৭০৫৮৩' },
+  { name:'মোঃ মোহাম্মদ রফিকুল ইসলাম', designation:'এসআই(নি.)', mobile:'০১৭১৬-৮১৬০৫৪' },
+  { name:'মোঃ হেলাল উদ্দিন', designation:'এসআই(নি.)', mobile:'০১৭৫০-৩০০৫৫৯' },
+  { name:'খাইরুল ইসলাম', designation:'এসআই(নি.)', mobile:'০১৭১৭-৭২৮১৮৩' },
+  { name:'নাদিমুল হক', designation:'এসআই(নি.)', mobile:'০১৭২১-৫৫২৭৫০' },
+  { name:'মোঃ হামিদুল ইসলাম', designation:'এসআই(নি.)', mobile:'০১৭১৮-৭৮৪৩২৪' },
+  { name:'বিশ্বজিৎ মজুমদার', designation:'এসআই(নি.)', mobile:'০১৯১৫-৯৮৮৪৯১' },
+  { name:'রাশেদুল হাসান', designation:'এসআই(নি.)', mobile:'০১৯৩১-২০৬১৮৫' },
+  { name:'রেজাউল করিম', designation:'এসআই(নি.)', mobile:'০১৭২৯-৫২৭৮৭০' },
+  { name:'মোঃ মমিনুল ইসলাম', designation:'এসআই(নি.)', mobile:'০১৭২৮-৩২২৫৫৩' },
+  { name:'সাগর মিয়া', designation:'পিএসআই(নি.)', mobile:'০১৭০৫-৯৭৭২৬৬' },
+  { name:'হাফিজুর রহমান', designation:'পিএসআই(নি.)', mobile:'০১৭৬১-৩৫৫৮৯০' },
+  { name:'ছাব্বির হোসেন', designation:'এএসআই(নি.)', mobile:'০১৮৭২-৭৩০৩৭৯' },
+  { name:'মোঃ শফিকুল ইসলাম', designation:'এএসআই(নি.)', mobile:'০১৭১৮-০৩৩১১৭' },
+  { name:'নাজমুল হক', designation:'এএসআই(নি.)', mobile:'০১৮৪০-৭২৭৩৪০' },
+  { name:'মোঃ আব্দুর ছাত্তার', designation:'এএসআই(নি.)', mobile:'০১৭১৮-৯৩৮২৯৯' },
+  { name:'মোঃ জিয়াউর রহমান', designation:'এএসআই(নি.)', mobile:'০১৭১৭-৩২১৬৯৫' },
+  { name:'মোঃ রাসেল খাঁন', designation:'এএসআই(নি.)', mobile:'০১৭১২-৬৬৮২৯৬' },
+  { name:'মোঃ ছামিউল হক', designation:'এএসআই(নি.)', mobile:'০১৭৪৫-১২৪৯৬৫' },
+  { name:'মুহাম্মদ আরিফ রব্বানী', designation:'এএসআই(নি.)', mobile:'০১৭৮৭-৮১৯৪১৩' },
+  { name:'হারুন অর রশিদ', designation:'এএসআই(নি.)', mobile:'০১৭৫৯-৫৬৭০৫৪' },
+  { name:'মোঃ আব্বাছ আলী', designation:'এএসআই(নি.)', mobile:'০১৯৮৫-৭০৪১৪৬' },
+  { name:'নোমান আহমেদ', designation:'এএসআই(নি.)', mobile:'০১৮২৬-৩৬৩৬০৭' },
+  { name:'মোঃ আলমগীর ইসলাম', designation:'এএসআই(নি.)', mobile:'০১৭৭৭-২৯৮৮০৬' },
+  { name:'মুহাম্মদ অন্তর মিয়া', designation:'এএসআই(নি.)', mobile:'০১৭৯৩-১০০২২২' }
+];
+
+const QUICK_POINTS = ['কিলো','মোবাইল','লিমা','চেকপোস্ট','অভিযান','হোন্ডা-মোবাইল','বিশেষ অভিযান','রোমিও','পাইলট','বিশেষ চেকপোস্ট'];
+
+function setSaveStatus(mode){
+  const el = document.getElementById('saveStatus');
+  if(!el) return;
+  if(mode==='cloud'){
+    el.textContent = 'সংরক্ষিত হচ্ছে ✓ (এই লিংক থেকে যেকোনো ডিভাইসে দেখা যাবে)';
+    el.style.color = '#3B7A4A';
+  } else if(mode==='local'){
+    el.textContent = 'শুধু এই ব্রাউজারে সংরক্ষিত হচ্ছে (অন্য ডিভাইস/ব্রাউজারে দেখা যাবে না)';
+    el.style.color = 'var(--brass)';
+  } else {
+    el.textContent = 'সংরক্ষণ করা যাচ্ছে না — এই সেশনের পর তথ্য হারিয়ে যাবে';
+    el.style.color = 'var(--danger)';
+  }
+}
+
+async function loadState(){
+  let loaded = null;
+  let mode = 'none';
+  try{
+    const r = await window.storage.get('roster-state', false);
+    if(r && r.value){ loaded = r.value; mode = 'cloud'; }
+  }catch(e){ /* Claude storage unavailable in this context */ }
+  if(!loaded){
+    try{
+      const ls = localStorage.getItem('roster-state');
+      if(ls){ loaded = ls; mode = 'local'; }
+    }catch(e){ /* localStorage unavailable too */ }
+  }
+  if(!loaded){
+    state.employees = DEFAULT_EMPLOYEES.map(e => ({ id: uid(), ...e }));
+    saveState();
+  }
+  if(loaded){
+    try{ state = Object.assign(state, JSON.parse(loaded)); }catch(e){ /* ignore corrupt data */ }
+  }
+  if(!state.footer || !state.footer.night || !state.footer.day){
+    state.footer = {
+      night: { empId:'', name:'', desig:'এএসআই(নি.)' },
+      day: { empId:'', name:'', desig:'এএসআই(নি.)' }
+    };
+  }
+  if(!state.officerType) state.officerType = 'night';
+  if(state.dutyPoints){
+    state.dutyPoints.forEach(dp=>{
+      if(dp.collapsed === undefined) dp.collapsed = false;
+      if(dp.callNumber){
+        const num = toEnDigits(dp.callNumber).replace(/[^0-9]/g,'');
+        if(num) dp.name = `${dp.name}-${toBn(num)}`;
+      }
+      delete dp.callNumber;
+    });
+  }
+  render();
+}
+
+async function saveState(){
+  const json = JSON.stringify(state);
+  try{
+    const r = await window.storage.set('roster-state', json, false);
+    if(r){ setSaveStatus('cloud'); return; }
+    throw new Error('no result');
+  }catch(e){
+    try{
+      localStorage.setItem('roster-state', json);
+      setSaveStatus('local');
+    }catch(e2){
+      setSaveStatus('none');
+    }
+  }
+}
+
+function uid(){ return Math.random().toString(36).slice(2,9); }
+
+// ---------- TABS ----------
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+// ---------- QUICK CHIPS ----------
+function renderChips(){
+  const wrap = document.getElementById('quickChips');
+  wrap.innerHTML = '';
+  QUICK_POINTS.forEach(name=>{
+    const c = document.createElement('button');
+    c.className = 'chip';
+    c.type = 'button';
+    c.textContent = '+ ' + name;
+    c.addEventListener('click', ()=>{
+      addDutyPoint(name);
+    });
+    wrap.appendChild(c);
+  });
+}
+
+// ---------- DUTY POINTS ----------
+function addDutyPoint(name=''){
+  state.dutyPoints.forEach(dp=>{
+    const hasData = dp.assignments.some(a=>a.name || a.mobile);
+    if(hasData) dp.collapsed = true;
+  });
+  state.dutyPoints.push({ id:uid(), name: defaultDutyName(name), collapsed:false, assignments:[{id:uid(), empId:'', desig:'এসআই(নি.)', name:'', mobile:'', time:''}] });
+  renderDutyBlocks();
+  saveState();
+}
+
+function renderDutyBlocks(){
+  const wrap = document.getElementById('dutyBlocks');
+  wrap.innerHTML = '';
+  if(state.dutyPoints.length === 0){
+    const e = document.createElement('div');
+    e.className = 'empty-state';
+    e.textContent = 'উপরের চিপ থেকে অথবা নিচের বাটন থেকে ডিউটি পয়েন্ট যোগ করুন।';
+    wrap.appendChild(e);
+    return;
+  }
+  state.dutyPoints.forEach(dp=>{
+    const block = document.createElement('div');
+    block.className = 'duty-block';
+    block.dataset.dpid = dp.id;
+
+    const head = document.createElement('div');
+    head.className = 'duty-block-head';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'ডিউটি পয়েন্টের নাম';
+    nameInput.value = dp.name;
+    nameInput.addEventListener('input', ()=>{
+      dp.name = nameInput.value;
+      saveState();
+    });
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'btn-small';
+    toggleBtn.style.whiteSpace = 'nowrap';
+    toggleBtn.textContent = dp.collapsed ? 'দেখান' : 'হাইড করুন';
+    toggleBtn.addEventListener('click', ()=>{
+      dp.collapsed = !dp.collapsed;
+      renderDutyBlocks();
+      saveState();
+    });
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn-danger';
+    delBtn.textContent = 'মুছুন';
+    delBtn.addEventListener('click', ()=>{
+      state.dutyPoints = state.dutyPoints.filter(x=>x.id!==dp.id);
+      renderDutyBlocks(); saveState();
+    });
+    head.appendChild(nameInput);
+    head.appendChild(toggleBtn);
+    head.appendChild(delBtn);
+    block.appendChild(head);
+
+
+    const body = document.createElement('div');
+    body.className = 'duty-block-body';
+
+    if(dp.collapsed){
+      const summary = document.createElement('div');
+      summary.style.fontSize = '13px';
+      summary.style.color = 'var(--slate)';
+      summary.style.padding = '2px 2px 4px';
+      summary.style.lineHeight = '1.6';
+      const filled = dp.assignments.filter(a=>a.name || a.mobile);
+      if(filled.length === 0){
+        summary.textContent = 'এখনো কোনো তথ্য পূরণ করা হয়নি।';
+        summary.style.color = 'var(--muted)';
+      } else {
+        summary.innerHTML = filled.map(a=>{
+          const mobileBn = a.mobile ? toBn(a.mobile) : '';
+          const desigPart = a.desig ? `${a.desig} ` : '';
+          const namePart = a.name || '';
+          const mobilePart = mobileBn ? `-${mobileBn}` : '';
+          const timePart = a.time ? ` (${toBn(a.time)})` : '';
+          return `${desigPart}${namePart}${mobilePart}${timePart}`;
+        }).join('<br>');
+      }
+      body.appendChild(summary);
+      block.appendChild(body);
+      wrap.appendChild(block);
+      return;
+    }
+
+    dp.assignments.forEach(a=>{
+      const row = document.createElement('div');
+      row.className = 'assign-row';
+      row.dataset.aid = a.id;
+
+      const fields = document.createElement('div');
+      fields.className = 'assign-fields';
+
+      const empSelect = document.createElement('select');
+      empSelect.dataset.f = 'emp';
+      const blankOpt = document.createElement('option');
+      blankOpt.value = '';
+      blankOpt.textContent = 'কর্মী তালিকা থেকে বাছুন (ঐচ্ছিক)';
+      empSelect.appendChild(blankOpt);
+
+      const usedElsewhere = new Set();
+      state.dutyPoints.forEach(otherDp=>{
+        otherDp.assignments.forEach(otherA=>{
+          if(otherA.empId && otherA.id !== a.id) usedElsewhere.add(otherA.empId);
+        });
+      });
+
+      state.employees.forEach(emp=>{
+        if(usedElsewhere.has(emp.id)) return;
+        if(dp.name.startsWith('কিলো') && emp.designation !== 'এসআই(নি.)') return;
+        const o = document.createElement('option');
+        o.value = emp.id;
+        o.textContent = `${emp.designation} ${emp.name}`;
+        if(a.empId === emp.id) o.selected = true;
+        empSelect.appendChild(o);
+      });
+      empSelect.addEventListener('change', ()=>{
+        const emp = state.employees.find(x=>x.id===empSelect.value);
+        if(emp){
+          a.empId = emp.id; a.desig = emp.designation; a.name = emp.name; a.mobile = emp.mobile;
+        } else {
+          a.empId = '';
+        }
+        renderDutyBlocks(); saveState();
+      });
+      fields.appendChild(empSelect);
+
+      const desigInput = document.createElement('input');
+      desigInput.type = 'text'; desigInput.dataset.f = 'desig';
+      desigInput.placeholder='পদবী'; desigInput.value = a.desig;
+      desigInput.addEventListener('input', ()=>{ a.desig = desigInput.value; saveState(); });
+      fields.appendChild(desigInput);
+
+      const nameInput2 = document.createElement('input');
+      nameInput2.type = 'text'; nameInput2.dataset.f = 'name';
+      nameInput2.placeholder='নাম'; nameInput2.value = a.name;
+      nameInput2.addEventListener('input', ()=>{ a.name = nameInput2.value; saveState(); });
+      fields.appendChild(nameInput2);
+
+      const mobileInput = document.createElement('input');
+      mobileInput.type = 'tel'; mobileInput.dataset.f = 'mobile';
+      mobileInput.placeholder='মোবাইল নম্বর'; mobileInput.value = a.mobile;
+      mobileInput.addEventListener('input', ()=>{ a.mobile = mobileInput.value; saveState(); });
+      fields.appendChild(mobileInput);
+
+      const timeInput = document.createElement('input');
+      timeInput.type = 'text'; timeInput.dataset.f = 'time';
+      timeInput.placeholder='সময় (ঐচ্ছিক)'; timeInput.value = a.time;
+      timeInput.addEventListener('input', ()=>{ a.time = timeInput.value; saveState(); });
+      fields.appendChild(timeInput);
+
+      const rmBtn = document.createElement('button');
+      rmBtn.className = 'btn-small';
+      rmBtn.textContent = 'বাদ দিন';
+      rmBtn.addEventListener('click', ()=>{
+        dp.assignments = dp.assignments.filter(x=>x.id!==a.id);
+        if(dp.assignments.length===0) dp.assignments.push({id:uid(),empId:'',desig:'এসআই(নি.)',name:'',mobile:'',time:''});
+        renderDutyBlocks(); saveState();
+      });
+      fields.appendChild(rmBtn);
+
+      row.appendChild(fields);
+      body.appendChild(row);
+    });
+
+    const addAssignBtn = document.createElement('button');
+    addAssignBtn.className = 'btn-small';
+    addAssignBtn.style.marginTop = '6px';
+    addAssignBtn.textContent = '+ এই পয়েন্টে আরেকজন / শিফট যোগ করুন';
+    addAssignBtn.addEventListener('click', ()=>{
+      dp.assignments.push({id:uid(), empId:'', desig:'এসআই(নি.)', name:'', mobile:'', time:''});
+      renderDutyBlocks(); saveState();
+    });
+    body.appendChild(addAssignBtn);
+    block.appendChild(body);
+
+    body.addEventListener('focusin', (e)=>{
+      const target = e.target;
+      if(target.tagName !== 'INPUT' && target.tagName !== 'SELECT') return;
+
+      let changed = false;
+      state.dutyPoints.forEach(other=>{
+        if(other.id === dp.id) return;
+        const hasData = other.assignments.some(x=>x.name || x.mobile);
+        if(hasData && !other.collapsed){ other.collapsed = true; changed = true; }
+      });
+      if(!changed) return;
+
+      const fieldSel = target.dataset.f;
+      const rowEl = target.closest('.assign-row');
+      const aId = rowEl ? rowEl.dataset.aid : null;
+
+      renderDutyBlocks();
+      saveState();
+
+      if(aId && fieldSel){
+        const newRow = document.querySelector(`.assign-row[data-aid="${aId}"]`);
+        const newField = newRow ? newRow.querySelector(`[data-f="${fieldSel}"]`) : null;
+        if(newField) newField.focus();
+      }
+    });
+
+    wrap.appendChild(block);
+  });
+  if(document.getElementById('footerEmpSelect-night')) renderFooterSelect();
+}
+
+document.getElementById('addDutyPoint').addEventListener('click', ()=>addDutyPoint(''));
+
+document.getElementById('summaryBtn').addEventListener('click', ()=>{
+  state.dutyPoints.forEach(dp=>{ dp.collapsed = true; });
+  renderDutyBlocks();
+  saveState();
+});
+function renderFooterSelect(){
+  const usedInDuty = new Set();
+  state.dutyPoints.forEach(dp=>{
+    dp.assignments.forEach(a=>{
+      if(a.empId) usedInDuty.add(a.empId);
+    });
+  });
+  ['night','day'].forEach(type=>{
+    const sel = document.getElementById(`footerEmpSelect-${type}`);
+    sel.innerHTML = '';
+    const blank = document.createElement('option');
+    blank.value = '';
+    blank.textContent = 'নাম বাছুন অথবা নিচে সরাসরি লিখুন';
+    sel.appendChild(blank);
+    state.employees.forEach(emp=>{
+      if(usedInDuty.has(emp.id) && state.footer[type].empId !== emp.id) return;
+      const o = document.createElement('option');
+      o.value = emp.id;
+      o.textContent = `${emp.designation} ${emp.name}`;
+      if(state.footer[type].empId === emp.id) o.selected = true;
+      sel.appendChild(o);
+    });
+  });
+}
+
+function wireFooterInputs(){
+  ['night','day'].forEach(type=>{
+    document.getElementById(`footerEmpSelect-${type}`).addEventListener('change', function(){
+      const emp = state.employees.find(x=>x.id===this.value);
+      if(emp){
+        document.getElementById(`footerName-${type}`).value = emp.name;
+        document.getElementById(`footerDesig-${type}`).value = emp.designation;
+        state.footer[type].empId = emp.id;
+        state.footer[type].name = emp.name;
+        state.footer[type].desig = emp.designation;
+        saveState();
+      }
+    });
+    document.getElementById(`footerName-${type}`).addEventListener('input', function(){
+      state.footer[type].name = this.value; saveState();
+    });
+    document.getElementById(`footerDesig-${type}`).addEventListener('input', function(){
+      state.footer[type].desig = this.value; saveState();
+    });
+  });
+  document.querySelectorAll('#officerTypeChips .chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      state.officerType = chip.dataset.type;
+      renderOfficerToggle();
+      saveState();
+    });
+  });
+}
+
+function renderOfficerToggle(){
+  document.querySelectorAll('#officerTypeChips .chip').forEach(chip=>{
+    chip.classList.toggle('active', chip.dataset.type === state.officerType);
+  });
+  document.getElementById('officerFields-night').classList.toggle('active', state.officerType==='night');
+  document.getElementById('officerFields-day').classList.toggle('active', state.officerType==='day');
+}
+
+let resetConfirmPending = false;
+let resetConfirmTimer = null;
+document.getElementById('resetEmpBtn').addEventListener('click', ()=>{
+  const btn = document.getElementById('resetEmpBtn');
+  if(!resetConfirmPending){
+    resetConfirmPending = true;
+    btn.textContent = 'নিশ্চিত করতে আবার চাপুন (আগের তালিকা মুছে যাবে)';
+    btn.style.background = 'var(--danger)';
+    btn.style.color = '#fff';
+    btn.style.borderColor = 'var(--danger)';
+    resetConfirmTimer = setTimeout(()=>{
+      resetConfirmPending = false;
+      btn.textContent = 'পুরনো তালিকা মুছে নতুন তালিকা বসান';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 4000);
+    return;
+  }
+  clearTimeout(resetConfirmTimer);
+  resetConfirmPending = false;
+  btn.textContent = 'পুরনো তালিকা মুছে নতুন তালিকা বসান';
+  btn.style.background = '';
+  btn.style.color = '';
+  btn.style.borderColor = '';
+  state.employees = DEFAULT_EMPLOYEES.map(e => ({ id: uid(), ...e }));
+  renderEmpList(); renderDutyBlocks(); renderFooterSelect(); saveState();
+});
+
+// ---------- EMPLOYEE DIRECTORY ----------
+document.getElementById('addEmpBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('empName').value.trim();
+  const designation = document.getElementById('empDesig').value;
+  const mobile = document.getElementById('empMobile').value.trim();
+  if(!name || !mobile){ return; }
+  state.employees.push({ id: uid(), name, designation, mobile });
+  document.getElementById('empName').value = '';
+  document.getElementById('empMobile').value = '';
+  renderEmpList(); renderDutyBlocks(); renderFooterSelect(); saveState();
+});
+
+let editingEmpId = null;
+
+function renderEmpList(){
+  const wrap = document.getElementById('empList');
+  wrap.innerHTML = '';
+  if(state.employees.length===0){
+    const e = document.createElement('div');
+    e.className = 'empty-state';
+    e.textContent = 'এখনো কোনো কর্মী যোগ করা হয়নি।';
+    wrap.appendChild(e);
+    return;
+  }
+  state.employees.forEach(emp=>{
+    if(emp.id === editingEmpId){
+      const editRow = document.createElement('div');
+      editRow.style.padding = '10px 2px';
+      editRow.style.borderBottom = '1px solid var(--line)';
+
+      const nameIn = document.createElement('input');
+      nameIn.type = 'text'; nameIn.value = emp.name; nameIn.placeholder = 'নাম';
+
+      const desigIn = document.createElement('select');
+      ['এসআই(নি.)','এএসআই(নি.)','পিএসআই(নি.)','নায়েক','কং','অফিসার ইনচার্জ','অন্যান্য'].forEach(d=>{
+        const o = document.createElement('option');
+        o.value = d; o.textContent = d;
+        if(emp.designation === d) o.selected = true;
+        desigIn.appendChild(o);
+      });
+      if(!['এসআই(নি.)','এএসআই(নি.)','পিএসআই(নি.)','নায়েক','কং','অফিসার ইনচার্জ'].includes(emp.designation)){
+        const custom = document.createElement('option');
+        custom.value = emp.designation; custom.textContent = emp.designation; custom.selected = true;
+        desigIn.insertBefore(custom, desigIn.firstChild);
+      }
+
+      const mobileIn = document.createElement('input');
+      mobileIn.type = 'tel'; mobileIn.value = emp.mobile; mobileIn.placeholder = 'মোবাইল নম্বর';
+
+      const saveBtn = document.createElement('button');
+      saveBtn.className = 'btn btn-ghost';
+      saveBtn.style.marginBottom = '6px';
+      saveBtn.textContent = 'সংরক্ষণ করুন';
+      saveBtn.addEventListener('click', ()=>{
+        emp.name = nameIn.value.trim();
+        emp.designation = desigIn.value;
+        emp.mobile = mobileIn.value.trim();
+        editingEmpId = null;
+        renderEmpList(); renderDutyBlocks(); renderFooterSelect(); saveState();
+      });
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'btn-small';
+      cancelBtn.textContent = 'বাতিল';
+      cancelBtn.addEventListener('click', ()=>{
+        editingEmpId = null;
+        renderEmpList();
+      });
+
+      editRow.appendChild(nameIn);
+      editRow.appendChild(desigIn);
+      editRow.appendChild(mobileIn);
+      editRow.appendChild(saveBtn);
+      editRow.appendChild(cancelBtn);
+      wrap.appendChild(editRow);
+      return;
+    }
+
+    const item = document.createElement('div');
+    item.className = 'emp-item';
+    const left = document.createElement('div');
+    left.innerHTML = `<div class="emp-name">${emp.name}</div><div class="emp-sub">${emp.designation} · ${emp.mobile}</div>`;
+    const btnGroup = document.createElement('div');
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn-small';
+    editBtn.style.marginRight = '4px';
+    editBtn.textContent = 'এডিট';
+    editBtn.addEventListener('click', ()=>{
+      editingEmpId = emp.id;
+      renderEmpList();
+    });
+    const del = document.createElement('button');
+    del.className = 'btn-danger';
+    del.textContent = 'মুছুন';
+    del.addEventListener('click', ()=>{
+      state.employees = state.employees.filter(x=>x.id!==emp.id);
+      renderEmpList(); renderDutyBlocks(); renderFooterSelect(); saveState();
+    });
+    btnGroup.appendChild(editBtn);
+    btnGroup.appendChild(del);
+    item.appendChild(left);
+    item.appendChild(btnGroup);
+    wrap.appendChild(item);
+  });
+}
+
+// ---------- SETTINGS ----------
+document.getElementById('saveCfgBtn').addEventListener('click', ()=>{
+  state.config.thana = document.getElementById('cfgThana').value.trim();
+  state.config.unit = document.getElementById('cfgUnit').value.trim();
+  state.config.callSign = document.getElementById('cfgCallSign').value.trim();
+  saveState();
+  renderMasthead();
+  renderDutyBlocks();
+});
+
+function renderMasthead(){
+  document.getElementById('mastThana').textContent = state.config.thana || 'দৈনন্দিন ডিউটি বার্তা প্রস্তুতকারক';
+  document.getElementById('mastUnit').textContent = state.config.unit || 'থানা ও ইউনিটের তথ্য "সেটিংস"-এ দিন';
+}
+
+// ---------- GENERATE ----------
+document.getElementById('genBtn').addEventListener('click', ()=>{
+  ['night','day'].forEach(type=>{
+    state.footer[type].name = document.getElementById(`footerName-${type}`).value.trim();
+    state.footer[type].desig = document.getElementById(`footerDesig-${type}`).value.trim();
+  });
+  saveState();
+
+  const fromDate = fmtDate(document.getElementById('fromDate').value);
+  const fromTime = fmtTime(document.getElementById('fromTime').value);
+  const toDate = fmtDate(document.getElementById('toDate').value);
+  const toTime = fmtTime(document.getElementById('toTime').value);
+
+  let lines = [];
+  lines.push(`আসসালামু আলাইকুম, স্যার। ${fromDate} খ্রি. ${fromTime} থেকে ${toDate} খ্রি. ${toTime} পর্যন্ত ডিউটি পার্টির ইনচার্জদের নাম ও মোবাইল নম্বর নিম্নরূপ:`);
+  lines.push('');
+
+  state.dutyPoints.forEach(dp=>{
+    if(!dp.name) return;
+    lines.push(`*${dp.name}*`);
+    dp.assignments.forEach(a=>{
+      if(!a.name && !a.mobile) return;
+      const mobileBn = a.mobile ? toBn(a.mobile) : '';
+      let line = `${a.desig} ${a.name}-${mobileBn}`;
+      lines.push(line);
+      if(a.time) lines.push(`(${toBn(a.time)})`);
+    });
+  });
+
+  const officer = state.footer[state.officerType];
+  const officerLabel = state.officerType === 'night' ? 'রাত্রিকালীন ডিউটি অফিসার' : 'দিবাকালীন ডিউটি অফিসার';
+
+  lines.push('');
+  lines.push('');
+  lines.push(`*${officerLabel}*`);
+  if(officer.name) lines.push(officer.name);
+  if(officer.desig) lines.push(officer.desig);
+  if(state.config.thana) lines.push(state.config.thana);
+  if(state.config.unit) lines.push(state.config.unit + '।');
+
+  const msg = lines.join('\n');
+  document.getElementById('outputBox').value = msg;
+  document.getElementById('outputBox').readOnly = true;
+  document.getElementById('editBtn').textContent = 'এডিট করুন';
+  document.getElementById('outputHint').textContent = 'নিচের বার্তাটি পাঠানোর জন্য প্রস্তুত';
+  document.getElementById('outputSection').style.display = 'block';
+  document.getElementById('outputSection').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+document.getElementById('editBtn').addEventListener('click', ()=>{
+  const box = document.getElementById('outputBox');
+  const btn = document.getElementById('editBtn');
+  const hint = document.getElementById('outputHint');
+  const nowEditing = box.readOnly;
+  box.readOnly = !nowEditing;
+  if(nowEditing){
+    btn.textContent = 'সম্পন্ন করুন';
+    hint.textContent = 'বার্তাটি এডিট করা যাচ্ছে — শেষ হলে "সম্পন্ন করুন" চাপুন';
+    box.focus();
+  } else {
+    btn.textContent = 'এডিট করুন';
+    hint.textContent = 'নিচের বার্তাটি পাঠানোর জন্য প্রস্তুত';
+  }
+});
+
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  const box = document.getElementById('outputBox');
+  const text = box.value;
+  const wasReadOnly = box.readOnly;
+  let success = false;
+
+  try{
+    await navigator.clipboard.writeText(text);
+    success = true;
+  }catch(e){
+    try{
+      box.readOnly = false;
+      box.focus();
+      box.select();
+      box.setSelectionRange(0, text.length);
+      success = document.execCommand('copy');
+      box.readOnly = wasReadOnly;
+      if(wasReadOnly) box.blur();
+    }catch(e2){
+      success = false;
+      box.readOnly = wasReadOnly;
+    }
+  }
+
+  if(success){
+    document.getElementById('copiedMsg').textContent = 'কপি হয়েছে ✓';
+    setTimeout(()=>{ document.getElementById('copiedMsg').textContent=''; }, 2000);
+  } else {
+    document.getElementById('copiedMsg').textContent = 'কপি করা যায়নি, ম্যানুয়ালি সিলেক্ট করুন';
+  }
+});
+
+// ---------- INIT ----------
+function render(){
+  renderChips();
+  renderDutyBlocks();
+  renderEmpList();
+  renderFooterSelect();
+  renderOfficerToggle();
+  renderMasthead();
+  document.getElementById('cfgThana').value = state.config.thana || '';
+  document.getElementById('cfgUnit').value = state.config.unit || '';
+  document.getElementById('cfgCallSign').value = state.config.callSign || '';
+  document.getElementById('footerName-night').value = state.footer.night.name || '';
+  document.getElementById('footerDesig-night').value = state.footer.night.desig || 'এএসআই(নি.)';
+  document.getElementById('footerName-day').value = state.footer.day.name || '';
+  document.getElementById('footerDesig-day').value = state.footer.day.desig || 'এএসআই(নি.)';
+}
+
+wireFooterInputs();
+loadState();
+</script>
+</body>
+</html>
